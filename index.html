@@ -8,40 +8,29 @@
         <script>
            AFRAME.registerComponent('videohandler', {
     init: function () {
-
         var marker = this.el;
-
-        var videoEntity = marker.querySelector('a-video');
-
-        this.vid = document.querySelector(
-            videoEntity.getAttribute('src')
-        );
+        this.vid = document.querySelector("#vid");
 
         marker.addEventListener('markerFound', function () {
-
-            document.querySelectorAll('video').forEach(function(v) {
-                this.vid.muted = false;
-                 if (this.vid.paused) {
-                        this.vid.play();
-                    }
-
-            }.bind(this));
+            this.toggle = true;
 
             this.vid.muted = false;
             this.vid.volume = 1;
 
-            if (this.vid.paused) {
-                this.vid.play();
-            }
+            var promise = this.vid.play();
 
+            if (promise !== undefined) {
+                promise.catch(function(error) {
+                    console.log("Video play error:", error);
+                });
+            }
         }.bind(this));
 
         marker.addEventListener('markerLost', function () {
-
+            this.toggle = false;
             this.vid.pause();
-
         }.bind(this));
-    }
+    },
 });
         </script>
     </head>
@@ -56,26 +45,31 @@
             gesture-detector
         >
             <a-assets>
-               <video
+                <video
                     id="vid"
                     src="assets/asset7.mp4"
-                    preload="metadata"
+                    preload="auto"
+                    response-type="arraybuffer"
                     loop
-                    crossorigin="anonymous"
-                    playsinline
+                    crossorigin
                     webkit-playsinline
-                    muted
+                    autoplay
+            
+                    playsinline
                 ></video>
-                
-                <video
+
+
+                    <video
                     id="vid1"
                     src="assets/sach3.mp4"
-                    preload="metadata"
+                    preload="auto"
+                    response-type="arraybuffer"
                     loop
-                    crossorigin="anonymous"
-                    playsinline
+                    crossorigin
                     webkit-playsinline
-                    muted
+                    autoplay
+                 
+                    playsinline
                 ></video>
                 
                 
@@ -118,7 +112,7 @@
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                id="markerB"
+                id="markerA"
             >
                 <a-video
                     src="#vid1"
