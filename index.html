@@ -6,14 +6,25 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
         <script>
-           AFRAME.registerComponent('videohandler', {
+            AFRAME.registerComponent('videohandler', {
     init: function () {
         var marker = this.el;
-        this.vid = document.querySelector("#vid");
+
+        // Lấy video nằm trong marker hiện tại
+        var videoEl = marker.querySelector('a-video');
+        this.vid = document.querySelector(
+            videoEl.getAttribute('src')
+        );
 
         marker.addEventListener('markerFound', function () {
-            this.toggle = true;
 
+            // Dừng tất cả video
+            document.querySelectorAll('video').forEach(function(v) {
+                v.pause();
+                v.currentTime = 0;
+            });
+
+            // Phát video của marker hiện tại
             this.vid.muted = false;
             this.vid.volume = 1;
 
@@ -27,10 +38,9 @@
         }.bind(this));
 
         marker.addEventListener('markerLost', function () {
-            this.toggle = false;
             this.vid.pause();
         }.bind(this));
-    },
+    }
 });
         </script>
     </head>
