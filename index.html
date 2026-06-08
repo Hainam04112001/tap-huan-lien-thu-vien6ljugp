@@ -6,59 +6,51 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
         <script>
-                   AFRAME.registerComponent('videohandler', {
-            init: function () {
+            AFRAME.registerComponent('videohandler', {
+    init: function () {
 
-                this.vid.pause();
-                this.vid.currentTime = 0;
-                
-                var marker = this.el;
-        
-                var videoEl = marker.querySelector('a-video');
-        
-                this.vid = document.querySelector(
-                    videoEl.getAttribute('src')
-                );
-        
-                // đảm bảo video không tự phát
-                this.vid.pause();
-                this.vid.currentTime = 0;
-        
-                marker.addEventListener('markerFound', function () {
-        
-                    // dừng toàn bộ video khác
-                    document.querySelectorAll('video').forEach(function(v) {
-        
-                        if (v !== this.vid) {
-                            v.pause();
-                            v.currentTime = 0;
-                        }
-        
-                    }.bind(this));
-        
-                    // phát video của marker hiện tại
-                    this.vid.currentTime = 0;
-                    this.vid.muted = false;
-                    this.vid.volume = 1;
-        
-                    var promise = this.vid.play();
-        
-                    if (promise !== undefined) {
-                        promise.catch(function(error) {
-                            console.log("Video play error:", error);
-                        });
-                    }
-        
-                }.bind(this));
-        
-                marker.addEventListener('markerLost', function () {
-        
-                    this.vid.pause();
-                    this.vid.currentTime = 0;
-        
-                }.bind(this));
+        var marker = this.el;
+
+        // lấy video tương ứng trong marker hiện tại
+        var videoEntity = marker.querySelector('a-video');
+        this.vid = document.querySelector(
+            videoEntity.getAttribute('src')
+        );
+
+        marker.addEventListener('markerFound', function () {
+
+            // dừng các video khác
+            document.querySelectorAll('video').forEach(function(v) {
+
+                if (v !== this.vid) {
+                    v.pause();
+                    v.currentTime = 0;
+                }
+
+            }.bind(this));
+
+            // phát video của marker hiện tại
+            this.vid.muted = false;
+            this.vid.volume = 1;
+            this.vid.currentTime = 0;
+
+            var playPromise = this.vid.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log(error);
+                });
             }
-        });
+
+        }.bind(this));
+
+        marker.addEventListener('markerLost', function () {
+
+            this.vid.pause();
+
+        }.bind(this));
+    }
+});
         </script>
     </head>
 
@@ -80,13 +72,11 @@
                     loop
                     crossorigin
                     webkit-playsinline
-                    
-            
                     playsinline
                 ></video>
 
 
-                    <video
+                <video
                     id="vid1"
                     src="assets/sach3.mp4"
                     preload="auto"
@@ -94,8 +84,6 @@
                     loop
                     crossorigin
                     webkit-playsinline
-                 
-                 
                     playsinline
                 ></video>
                 
@@ -114,7 +102,7 @@
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                <a-marker ... id="markerA">
+                id="markerA"
             >
                 <a-video
                     src="#vid"
@@ -139,7 +127,7 @@
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                <a-marker ... id="markerB">
+                id="markerB"
             >
                 <a-video
                     src="#vid1"
