@@ -16,26 +16,30 @@
             videoEl.getAttribute('src')
         );
 
-        marker.addEventListener('markerFound', function () {
+       marker.addEventListener('markerFound', function () {
 
-            // Dừng tất cả video
-            document.querySelectorAll('video').forEach(function(v) {
-                v.pause();
-                v.currentTime = 0;
-            });
+    // Dừng tất cả video khác
+    document.querySelectorAll('video').forEach(function(v) {
+        if (v !== this.vid) {
+            v.pause();
+            v.currentTime = 0;
+        }
+    }.bind(this));
 
-            // Phát video của marker hiện tại
-            this.vid.muted = false;
-            this.vid.volume = 1;
+    // Đảm bảo video hiện tại phát lại từ đầu
+    this.vid.currentTime = 0;
+    this.vid.muted = false;
+    this.vid.volume = 1;
 
-            var promise = this.vid.play();
+    var promise = this.vid.play();
 
-            if (promise !== undefined) {
-                promise.catch(function(error) {
-                    console.log("Video play error:", error);
-                });
-            }
-        }.bind(this));
+    if (promise !== undefined) {
+        promise.catch(function(error) {
+            console.log("Video play error:", error);
+        });
+    }
+
+}.bind(this));
 
         marker.addEventListener('markerLost', function () {
             this.vid.pause();
