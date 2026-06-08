@@ -8,29 +8,30 @@
         <script>
            AFRAME.registerComponent('videohandler', {
     init: function () {
-        var marker = this.el;
-        this.vid = document.querySelector("#vid");
 
-        marker.addEventListener('markerFound', function () {
-            this.toggle = true;
+        const marker = this.el;
 
-            this.vid.muted = false;
-            this.vid.volume = 1;
+        const videoSrc = marker.querySelector('a-video')
+                               .getAttribute('src');
 
-            var promise = this.vid.play();
+        const video = document.querySelector(videoSrc);
 
-            if (promise !== undefined) {
-                promise.catch(function(error) {
-                    console.log("Video play error:", error);
-                });
-            }
-        }.bind(this));
+        marker.addEventListener('markerFound', () => {
 
-        marker.addEventListener('markerLost', function () {
-            this.toggle = false;
-            this.vid.pause();
-        }.bind(this));
-    },
+            document.querySelectorAll('video').forEach(v => {
+                v.pause();
+                v.currentTime = 0;
+            });
+
+            video.play();
+        });
+
+        marker.addEventListener('markerLost', () => {
+
+            video.pause();
+            video.currentTime = 0;
+        });
+    }
 });
         </script>
     </head>
@@ -53,7 +54,7 @@
                     loop
                     crossorigin
                     webkit-playsinline
-                    autoplay
+                   
             
                     playsinline
                 ></video>
@@ -67,7 +68,7 @@
                     loop
                     crossorigin
                     webkit-playsinline
-                    autoplay
+               
                  
                     playsinline
                 ></video>
@@ -87,7 +88,7 @@
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
+                id="marker1"
             >
                 <a-video
                     src="#vid"
@@ -112,7 +113,7 @@
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
+                id="marker2"
             >
                 <a-video
                     src="#vid1"
