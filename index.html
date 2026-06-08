@@ -20,10 +20,10 @@
         marker.addEventListener('markerFound', function () {
 
             document.querySelectorAll('video').forEach(function(v) {
-
-                if (v !== this.vid) {
-                    v.pause();
-                }
+                this.vid.muted = false;
+                 if (this.vid.paused) {
+                        this.vid.play();
+                    }
 
             }.bind(this));
 
@@ -56,27 +56,26 @@
             gesture-detector
         >
             <a-assets>
-                <video
+               <video
                     id="vid"
                     src="assets/asset7.mp4"
-                    preload="auto"
-                    response-type="arraybuffer"
+                    preload="metadata"
                     loop
-                    crossorigin
-                    webkit-playsinline
+                    crossorigin="anonymous"
                     playsinline
+                    webkit-playsinline
+                    muted
                 ></video>
-
-
+                
                 <video
                     id="vid1"
                     src="assets/sach3.mp4"
-                    preload="auto"
-                    response-type="arraybuffer"
+                    preload="metadata"
                     loop
-                    crossorigin
-                    webkit-playsinline
+                    crossorigin="anonymous"
                     playsinline
+                    webkit-playsinline
+                    muted
                 ></video>
                 
                 
