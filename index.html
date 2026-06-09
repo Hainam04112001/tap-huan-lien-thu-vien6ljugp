@@ -1,342 +1,243 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
+<meta charset="utf-8">
 
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+<script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 
-    <script>
-        let audioUnlocked = false;
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+}
 
-        AFRAME.registerComponent('videohandler', {
-            schema: {
-                target: { type: 'selector' }
-            },
+#startAR{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    z-index:999999;
+    cursor:pointer;
+}
+</style>
 
-            init: function () {
+<script>
 
-                const marker = this.el;
-                const video = this.data.target;
+let audioUnlocked = false;
 
-                marker.addEventListener('markerFound', () => {
+AFRAME.registerComponent('videohandler', {
+    schema:{
+        target:{type:'selector'}
+    },
 
-                    if (audioUnlocked) {
-                        video.muted = false;
-                    }
+    init:function(){
 
-                    video.play().catch(err => {
-                        console.log("Play blocked:", err);
-                    });
+        const marker = this.el;
+        const video = this.data.target;
 
-                });
+        marker.addEventListener('markerFound', () => {
 
-                marker.addEventListener('markerLost', () => {
+            if(!audioUnlocked) return;
 
-                    video.pause();
-                    video.currentTime = 0;
+            document.querySelectorAll('video').forEach(v => {
+                if(v !== video){
+                    v.pause();
+                    v.currentTime = 0;
+                }
+            });
 
-                });
-
-            }
-        });
-
-        window.addEventListener('load', () => {
-
-            const startBtn = document.getElementById('startAR');
-
-            startBtn.addEventListener('click', () => {
-
-                audioUnlocked = true;
-
-                document.querySelectorAll('video').forEach(v => {
-                    v.muted = false;
-                });
-
-                startBtn.style.display = 'none';
-
+            video.play().catch(err=>{
+                console.log(err);
             });
 
         });
-    </script>
 
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
+        marker.addEventListener('markerLost', () => {
+
+            video.pause();
+            video.currentTime = 0;
+
+        });
+
+    }
+});
+
+window.addEventListener('load', () => {
+
+    const btn = document.getElementById('startAR');
+
+    btn.addEventListener('click', async () => {
+
+        const videos = document.querySelectorAll('video');
+
+        for(const v of videos){
+
+            try{
+
+                v.muted = true;
+
+                await v.play();
+
+                v.pause();
+                v.currentTime = 0;
+
+                v.muted = false;
+
+            }catch(e){
+                console.log(e);
+            }
+
         }
 
-        #startAR {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.9);
-            color: white;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            font-family: Arial, sans-serif;
-            cursor: pointer;
-        }
-    </style>
+        audioUnlocked = true;
+
+        btn.style.display = "none";
+
+    });
+
+});
+
+</script>
+
 </head>
 
 <body>
 
 <div id="startAR">
-    CHẠM ĐỂ BẬT ÂM THANH AR
+CHẠM ĐỂ BẮT ĐẦU AR
 </div>
 
 <a-scene
-    vr-mode-ui="enabled: false"
-    loading-screen="enabled: false"
-    embedded
-    gesture-detector
-    arjs="sourceType: webcam; debugUIEnabled: false;"
->
+embedded
+gesture-detector
+vr-mode-ui="enabled:false"
+loading-screen="enabled:false"
+arjs="sourceType:webcam; debugUIEnabled:false;">
 
-    <a-assets>
-         <!-- Người bình thường tử tế -->
-        <video
-            id="vid"
-            src="assets/asset7.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
+<a-assets>
 
-         <!-- Học tập và làm theo tấm gương đạo đức HCM -->
-        <video
-            id="vid1"
-            src="assets/sach3.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
+<video id="vid"  src="assets/asset7.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
+<video id="vid1" src="assets/sach3.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
+<video id="vid2" src="assets/sach4.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
+<video id="vid3" src="assets/sach5.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
+<video id="vid4" src="assets/sach2.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
+<video id="vid5" src="assets/asset.mp4" loop playsinline webkit-playsinline crossorigin="anonymous" muted></video>
 
-         <!-- Sổ tay phòng chống mã độc và tấn công mạng -->
-        <video
-            id="vid2"
-            src="assets/sach4.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
+</a-assets>
 
+<!-- Marker 1 -->
+<a-marker
+type="pattern"
+url="assets/marker7.patt"
+id="marker7"
+videohandler="target:#vid">
 
-         <!-- Lịch sử phong trào học sinh, sinh viên VN và hội sinh viên VN -->
-        <video
-            id="vid3"
-            src="assets/sach5.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
+<a-video
+src="#vid"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
+</a-marker>
 
-         <!-- Giáo sư, viện sĩ Trần Đại Nghĩa -->
-        <video
-            id="vid4"
-            src="assets/sach2.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
+<!-- Marker 2 -->
+<a-marker
+type="pattern"
+url="assets/marker3.patt"
+id="marker3"
+videohandler="target:#vid1">
 
+<a-video
+src="#vid1"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
-        <!-- Việt nam non sông gấm vóc Việt Nam -->
-        <video
-            id="vid5"
-            src="assets/asset.mp4"
-            preload="auto"
-            loop
-            crossorigin="anonymous"
-            webkit-playsinline
-            playsinline
-            muted
-        ></video>
-        
-    </a-assets>
+</a-marker>
 
-    <!-- Người bình thường tử tế -->
-    <a-marker
-        id="marker7"
-        type="pattern"
-        url="assets/marker7.patt"
-        videohandler="target: #vid"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
+<!-- Marker 3 -->
+<a-marker
+type="pattern"
+url="assets/marker4.patt"
+id="marker4"
+videohandler="target:#vid2">
 
-        <a-video
-            src="#vid"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
-    </a-marker>
+<a-video
+src="#vid2"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
-    <!-- Học tập và làm theo tấm gương đạo đức HCM -->
-    <a-marker
-        id="marker3"
-        type="pattern"
-        url="assets/marker3.patt"
-        videohandler="target: #vid1"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
+</a-marker>
 
-        <a-video
-            src="#vid1"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
+<!-- Marker 4 -->
+<a-marker
+type="pattern"
+url="assets/marker5.patt"
+id="marker5"
+videohandler="target:#vid3">
 
-    </a-marker>
+<a-video
+src="#vid3"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
+</a-marker>
 
+<!-- Marker 5 -->
+<a-marker
+type="pattern"
+url="assets/marker2.patt"
+id="marker2"
+videohandler="target:#vid4">
 
-    <!-- Sổ tay phòng chống mã độc và tấn công mạng -->
-    <a-marker
-        id="marker3"
-        type="pattern"
-        url="assets/marker4.patt"
-        videohandler="target: #vid1"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
+<a-video
+src="#vid4"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
-        <a-video
-            src="#vid2"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
+</a-marker>
 
-    </a-marker>
+<!-- Marker 6 -->
+<a-marker
+type="pattern"
+url="assets/marker.patt"
+id="marker1"
+videohandler="target:#vid5">
 
+<a-video
+src="#vid5"
+position="0 0.1 0"
+rotation="-90 0 0"
+scale="1 1 1"
+gesture-handler>
+</a-video>
 
-    <!-- Lịch sử phong trào học sinh, sinh viên VN và hội sinh viên VN -->
-    <a-marker
-        id="marker5"
-        type="pattern"
-        url="assets/marker5.patt"
-        videohandler="target: #vid1"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
+</a-marker>
 
-        <a-video
-            src="#vid3"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
-
-    </a-marker>
-
-    
-    <!-- Giáo sư, viện sĩ Trần Đại Nghĩa -->
-    <a-marker
-        id="marker4"
-        type="pattern"
-        url="assets/marker2.patt"
-        videohandler="target: #vid1"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
-
-        <a-video
-            src="#vid4"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
-
-    </a-marker>
-
-    
-    <!-- Việt nam non sông gấm vóc Việt Nam -->
-    <a-marker
-        id="marker5"
-        type="pattern"
-        url="assets/marker.patt"
-        videohandler="target: #vid1"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        raycaster="objects: .clickable"
-        cursor="fuse: false; rayOrigin: mouse;"
-    >
-
-        <a-video
-            src="#vid5"
-            position="0 0.1 0"
-            rotation="-90 0 0"
-            scale="1 1 1"
-            class="clickable"
-            gesture-handler
-        ></a-video>
-
-    </a-marker>
-    
-    <a-entity camera></a-entity>
+<a-entity camera></a-entity>
 
 </a-scene>
 
