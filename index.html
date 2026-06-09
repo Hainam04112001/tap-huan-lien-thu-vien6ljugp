@@ -135,7 +135,41 @@
             muted
         ></video>
 
-        
+        <!-- Giáo sư, viện sĩ Trần Đại Nghĩa -->
+        <video
+            id="vid3"
+            src="assets/sach2.mp4"
+            preload="auto"
+            loop
+            crossorigin="anonymous"
+            webkit-playsinline
+            playsinline
+            muted
+        ></video>
+
+    <!-- Lịch sử phong trào học sinh, sinh viên VN và hội sinh viên VN -->
+         <video
+            id="vid4"
+            src="assets/sach5.mp4"
+            preload="auto"
+            loop
+            crossorigin="anonymous"
+            webkit-playsinline
+            playsinline
+            muted
+        ></video>
+
+    <!-- Việt nam non sông gấm vóc Việt Nam -->
+        <video
+            id="vid5"
+            src="assets/asset.mp4"
+            preload="auto"
+            loop
+            crossorigin="anonymous"
+            webkit-playsinline
+            playsinline
+            muted
+        ></video>
     </a-assets>
 
     <!-- Người bình thường tử tế -->
@@ -216,6 +250,84 @@
 
     </a-marker>
 
+    <!-- Giáo sư, viện sĩ Trần Đại Nghĩa -->
+        <a-marker
+            id="marker2"
+            type="pattern"
+            url="assets/marker2.patt"
+            videohandler="target: #vid3"
+            smooth="true"
+            smoothCount="10"
+            smoothTolerance="0.01"
+            smoothThreshold="5"
+            emitevents="true"
+            raycaster="objects: .clickable"
+            cursor="fuse: false; rayOrigin: mouse;"
+        >
+
+        <a-video
+            src="#vid3"
+            position="0 0.1 0"
+            rotation="-90 0 0"
+            scale="1 1 1"
+            class="clickable"
+            gesture-handler
+        ></a-video>
+
+    </a-marker>
+
+     <!-- Lịch sử phong trào học sinh, sinh viên VN và hội sinh viên VN -->
+        <a-marker
+            id="marker5"
+            type="pattern"
+            url="assets/marker5.patt"
+            videohandler="target: #vid4"
+            smooth="true"
+            smoothCount="10"
+            smoothTolerance="0.01"
+            smoothThreshold="5"
+            emitevents="true"
+            raycaster="objects: .clickable"
+            cursor="fuse: false; rayOrigin: mouse;"
+        >
+
+        <a-video
+            src="#vid4"
+            position="0 0.1 0"
+            rotation="-90 0 0"
+            scale="1 1 1"
+            class="clickable"
+            gesture-handler
+        ></a-video>
+
+    </a-marker>
+
+    <!-- Việt nam non sông gấm vóc Việt Nam -->
+    <a-marker
+            id="marker"
+            type="pattern"
+            url="assets/marker.patt"
+            videohandler="target: #vid5"
+            smooth="true"
+            smoothCount="10"
+            smoothTolerance="0.01"
+            smoothThreshold="5"
+            emitevents="true"
+            raycaster="objects: .clickable"
+            cursor="fuse: false; rayOrigin: mouse;"
+        >
+
+        <a-video
+            src="#vid5"
+            position="0 0.1 0"
+            rotation="-90 0 0"
+            scale="1 1 1"
+            class="clickable"
+            gesture-handler
+        ></a-video>
+
+    </a-marker>
+    
     <a-entity camera></a-entity>
 
 </a-scene>
