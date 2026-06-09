@@ -117,27 +117,20 @@
             <a-entity camera></a-entity>
         </a-scene>
 
-        <script>
-document.body.addEventListener('touchstart', function unlock() {
+    <script>
+document.body.addEventListener('touchstart', function () {
 
-    let videos = document.querySelectorAll('video');
+    const videos = document.querySelectorAll('video');
 
     videos.forEach(v => {
-        v.muted = false;
-
-        let p = v.play();
-
-        if (p !== undefined) {
-            p.then(() => {
-                v.pause();
-                v.currentTime = 0;
-            });
-        }
+        v.play().then(() => {
+            v.pause();
+            v.currentTime = 0;
+            v.muted = false;
+        }).catch(() => {});
     });
 
-    document.body.removeEventListener('touchstart', unlock);
-
-}, { once: true });
+}, { once:true });
 </script>
     </body>
 </html>
